@@ -662,9 +662,12 @@ main {
           appearance: none;
   border: none; }
   .event__input--destination {
-    width: 150px; }
-    .event__input--destination::-webkit-calendar-picker-indicator {
-      display: none; }
+    width: 150px;
+    min-width: 0;
+    -webkit-appearance: auto;
+       -moz-appearance: auto;
+            appearance: auto;
+    background-color: transparent; }
   .event__input--time {
     width: 160px;
     text-align: center; }

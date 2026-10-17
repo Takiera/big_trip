@@ -81,7 +81,7 @@ const createPointOffersTemplate = (typeOffers, point, pointId) => {
 };
 
 const createPointFormTemplate = (point, destinations, offers) => {
-  const {basePrice, dateFromInput, dateToInput, destinationName, type} = point;
+  const {basePrice, dateFromInput, dateToInput, type} = point;
   const pointDestination = destinations.find((item) => item.id === point.destination);
   const typeOffers = offers.find((item) => item.type === point.type)?.offers;
   const pointId = escapeHtml(point.id ?? 'new-point');
@@ -95,10 +95,10 @@ const createPointFormTemplate = (point, destinations, offers) => {
       <label class="event__label  event__type-output" for="event-destination-${pointId}">
       <span class="visually-hidden">Destination for </span>${escapeHtml(type)}
       </label>
-      <input class="event__input  event__input--destination" id="event-destination-${pointId}" type="text" name="event-destination" value="${escapeHtml(destinationName)}" list="destination-list-${pointId}" autocomplete="off" required>
-      <datalist id="destination-list-${pointId}">
-      ${destinations.map((dest) => `<option value="${escapeHtml(dest.name)}"></option>`).join('\n')}
-      </datalist>
+      <select class="event__input  event__input--destination" id="event-destination-${pointId}" name="event-destination" required>
+        ${pointDestination ? '' : '<option value="" disabled selected>Choose a destination</option>'}
+        ${destinations.map((dest) => `<option value="${escapeHtml(dest.id)}" ${dest.id === point.destination ? 'selected' : ''}>${escapeHtml(dest.name)}</option>`).join('\n')}
+      </select>
     </div>
 
     <div class="event__field-group  event__field-group--time">
@@ -153,10 +153,7 @@ export default class PointForm extends AbstractStatefulView {
     this.#handleFormSubmit = onFormSubmit;
     this.#onDeletePoint = onDeletePoint;
 
-    this._setState({
-      ...PointForm.parsePointToState(point),
-      destinationName: destinations.find((destination) => destination.id === point.destination)?.name ?? '',
-    });
+    this._setState(PointForm.parsePointToState(point));
     this._restoreHandlers();
   }
 
@@ -175,7 +172,6 @@ export default class PointForm extends AbstractStatefulView {
 
   static parseStateToPoint(state) {
     const point = {...state, basePrice: Number(state.basePrice)};
-    delete point.destinationName;
     delete point.dateFromInput;
     delete point.dateToInput;
     return point;
@@ -187,7 +183,7 @@ export default class PointForm extends AbstractStatefulView {
     this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
     this.element.querySelector('form').addEventListener('reset', this.#resetHandler);
     this.element.querySelector('.event__type-list').addEventListener('change', this.#onEventTypeChange);
-    this.element.querySelector('.event__input--destination').addEventListener('input', this.#onDestinationChange);
+    this.element.querySelector('.event__input--destination').addEventListener('change', this.#onDestinationChange);
     this.element.querySelector('.event__input--price').addEventListener('input', this.#onPriceChange);
     this.element.querySelector('.event__available-offers')?.addEventListener('change', this.#onOfferChange);
 
@@ -246,8 +242,8 @@ export default class PointForm extends AbstractStatefulView {
   };
 
   #onDestinationChange = (evt) => {
-    const newDestination = this.#destinations.find((destination) => destination.name === evt.target.value);
-    this._setState({destination: newDestination?.id ?? null, destinationName: evt.target.value});
+    const newDestination = this.#destinations.find((destination) => String(destination.id) === evt.target.value);
+    this._setState({destination: newDestination?.id ?? null});
     const details = this.element.querySelector('.event__details');
     details.querySelector('.event__section--destination')?.remove();
     if (newDestination) {
@@ -299,7 +295,7 @@ export default class PointForm extends AbstractStatefulView {
     const price = this.element.querySelector('.event__input--price');
     const start = this.element.querySelector('input[name="event-start-time"]');
     const end = this.element.querySelector('input[name="event-end-time"]');
-    const validDestination = this.#destinations.some((item) => item.id === this._state.destination && item.name === destination.value);
+    const validDestination = this.#destinations.some((item) => item.id === this._state.destination && String(item.id) === destination.value);
     destination.setCustomValidity(validDestination ? '' : 'Choose a destination from the list.');
     const validPrice = price.value.trim() !== '' && Number.isFinite(Number(price.value)) && Number(price.value) >= 0;
     price.setCustomValidity(validPrice ? '' : 'Enter a finite price of zero or more.');
