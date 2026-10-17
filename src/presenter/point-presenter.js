@@ -9,19 +9,23 @@ export default class PointPresenter {
   #view = null;
   #changeEditingPoint = null;
   #deletePoint = null;
+  #updateFavorite = null;
+  #isEditing = false;
 
-  constructor({ destinations, offers, container, updatePoint, changeEditingPoint, deletePoint }) {
+  constructor({ destinations, offers, container, updatePoint, updateFavorite = updatePoint, changeEditingPoint, deletePoint }) {
     this.#pointsListComponent = container;
     this.updatePoint = updatePoint;
     this.#destinations = destinations;
     this.#offers = offers;
     this.#changeEditingPoint = changeEditingPoint;
     this.#deletePoint = deletePoint;
+    this.#updateFavorite = updateFavorite;
   }
 
-  init(point, renderPosition) {
+  init(point, renderPosition, isEditing = false) {
     this.point = point;
-    this.#view = this.createPointView();
+    this.#isEditing = isEditing;
+    this.#view = isEditing ? this.createPointFormView() : this.createPointView();
     render(this.#view, this.#pointsListComponent, renderPosition);
   }
 
@@ -36,7 +40,9 @@ export default class PointPresenter {
   }
 
   removeComponent = () => {
-    this.#view.remove();
+    this.#isEditing = false;
+    this.#view?.remove();
+    this.#view = null;
   };
 
   createPointFormView() {
@@ -52,6 +58,7 @@ export default class PointPresenter {
 
   update(point) {
     this.point = point;
+    this.#isEditing = false;
     const updatedPointComponent = this.createPointView();
     replace(updatedPointComponent, this.#view);
     this.#view.remove();
@@ -59,6 +66,10 @@ export default class PointPresenter {
   }
 
   enableEditMode = () => {
+    if (this.#isEditing) {
+      return;
+    }
+    this.#isEditing = true;
     const form = this.createPointFormView();
 
     replace(form, this.#view);
@@ -67,6 +78,10 @@ export default class PointPresenter {
   };
 
   disableEditMode = () => {
+    if (!this.#isEditing) {
+      return;
+    }
+    this.#isEditing = false;
     const point = this.createPointView();
 
     replace(point, this.#view);
@@ -80,19 +95,25 @@ export default class PointPresenter {
   };
 
   #onFavoriteButtonClick = () => {
-    this.updatePoint({...this.point, isFavorite: !this.point.isFavorite});
+    this.#updateFavorite({...this.point, isFavorite: !this.point.isFavorite});
   };
 
   #onFormClose = () => {
-    this.#changeEditingPoint(null);
+    if (this.#isEditing) {
+      this.#changeEditingPoint(null);
+    }
   };
 
   #onFormSubmit = (updatedPoint) => {
-    this.updatePoint(updatedPoint);
+    if (this.#isEditing) {
+      this.updatePoint(updatedPoint);
+    }
   };
 
   #onDeletePoint = (deletedPoint) => {
-    this.#deletePoint(deletedPoint);
+    if (this.#isEditing) {
+      this.#deletePoint(deletedPoint);
+    }
   };
 
 }

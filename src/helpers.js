@@ -1,25 +1,25 @@
 import dayjs from 'dayjs';
-import durationPlugin from 'dayjs/plugin/duration';
-
-dayjs.extend(durationPlugin);
 
 /** Возвращает слово с заглавной буквы */
 export const capitalize = (word) => word[0].toUpperCase() + word.slice(1);
 
-/** Возвращает слечайный элемент массива */
-export const getRandomArrayElement = (items) => items[Math.floot(Math.randon() * items.length)];
+/** Возвращает случайный элемент массива */
+export const getRandomArrayElement = (items) => items[Math.floor(Math.random() * items.length)];
 
 export const getDate = (date, format) => dayjs(date).format(format);
 
-export const getDateDuration = (date1, date2) => {
-  const diff = dayjs(date2).diff(date1);
-  const diffDuration = dayjs.duration(diff);
+export const getDateDuration = (dateFrom, dateTo) => {
+  const minutes = dayjs(dateTo).startOf('minute').diff(dayjs(dateFrom).startOf('minute'), 'minute');
 
-  if(diffDuration.days() > 0) {
-    return diffDuration.format('D[D] HH[H] mm[M]');
+  if (!Number.isFinite(minutes) || minutes < 0) {
+    return '';
   }
 
-  return diffDuration.format('HH[H] mm[M]');
+  const days = Math.floor(minutes / (24 * 60));
+  const hours = String(Math.floor(minutes / 60) % 24).padStart(2, '0');
+  const remainingMinutes = String(minutes % 60).padStart(2, '0');
+
+  return `${days > 0 ? `${days}D ` : ''}${hours}H ${remainingMinutes}M`;
 };
 
 export const sortByDay = (point1, point2) => dayjs(point1.dateFrom).diff(dayjs(point2.dateFrom));

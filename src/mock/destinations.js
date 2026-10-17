@@ -5,16 +5,16 @@ export const destinations = [
     'name': 'Chamonix',
     'pictures': [
       {
-        'src': 'https://loremflickr.com/248/152?random=3',
-        'description': 'Chamonix parliament building'
+        'src': 'img/photos/5.jpg',
+        'description': 'Mountain landscape'
       },
       {
-        'src': 'https://loremflickr.com/248/152?random=2',
-        'description': 'Chamonix parliament building'
+        'src': 'img/photos/2.jpg',
+        'description': 'Outdoor cafe'
       },
       {
-        'src': 'https://loremflickr.com/248/152?random=1',
-        'description': 'Chamonix parliament building'
+        'src': 'img/photos/4.jpg',
+        'description': 'Countryside landscape'
       }
     ]
   },
@@ -24,16 +24,16 @@ export const destinations = [
     'name': 'London',
     'pictures': [
       {
-        'src': 'http://picsum.photos/300/200?r=0.0762563005163317',
-        'description': 'Chamonix parliament building'
+        'src': 'img/photos/2.jpg',
+        'description': 'Outdoor cafe'
       },
       {
-        'src': 'https://loremflickr.com/248/152?random=6',
-        'description': 'Chamonix parliament building'
+        'src': 'img/photos/3.jpg',
+        'description': 'Buildings beside a canal'
       },
       {
-        'src': 'https://loremflickr.com/248/152?random=8',
-        'description': 'Chamonix parliament building'
+        'src': 'img/photos/4.jpg',
+        'description': 'Countryside landscape'
       }
     ]
   },
@@ -43,16 +43,16 @@ export const destinations = [
     'name': 'Saint-Petersburg',
     'pictures': [
       {
-        'src': 'http://picsum.photos/300/200?r=0.0762563005163317',
-        'description': 'Chamonix parliament building'
+        'src': 'img/photos/3.jpg',
+        'description': 'Buildings beside a canal'
       },
       {
-        'src': 'https://loremflickr.com/248/152?random=4',
-        'description': 'Chamonix parliament building'
+        'src': 'img/photos/2.jpg',
+        'description': 'Outdoor cafe'
       },
       {
-        'src': 'https://loremflickr.com/248/152?random=9',
-        'description': 'Chamonix parliament building'
+        'src': 'img/photos/1.jpg',
+        'description': 'Coastal landscape'
       }
     ]
   },
