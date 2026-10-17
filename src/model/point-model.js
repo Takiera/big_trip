@@ -10,14 +10,14 @@ export default class PointModel {
   #filters = null;
 
   init() {
-    this.#points = points;
+    this.#points = points.map((point) => ({ ...point, offers: [...point.offers] }));
     this.#destinations = destinations;
     this.#offers = offers;
     this.#filters = Object.values(FilterTypes);
   }
 
   get points() {
-    return this.#points;
+    return [...this.#points];
   }
 
   get destinations() {
@@ -40,7 +40,7 @@ export default class PointModel {
 
   addPoint(newPoint) {
     const point = { ...newPoint, id: id.getId() };
-    this.#points.push(point);
+    this.#points = [...this.#points, point];
     return point;
   }
 
